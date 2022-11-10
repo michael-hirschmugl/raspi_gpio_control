@@ -6,6 +6,7 @@ from time import sleep
 from os.path import exists
 import pickle
 import sys
+from datetime import datetime
 
 pin = int(sys.argv[1])
 state = int(sys.argv[2])
@@ -13,6 +14,8 @@ state = int(sys.argv[2])
 stateFileName = "state_log"
 stateFilePath = ""
 stateFileFullPath = stateFilePath + stateFileName
+logFileName = "usage_log.txt"
+logFileFullPath = stateFilePath + logFileName
 
 def file_test(pin):
   if exists(stateFilePath + stateFileName):
@@ -81,4 +84,10 @@ if __name__ == "__main__":
   set_pin_state(stateDict, pin, state)
   #sleep(2)
   #set_pin_state(stateDict, pin, 0)
+
+  logFile = open(logFileFullPath, "a")
+  dt = datetime.now()
+  str_date_time = dt.strftime("%d-%m-%Y, %H:%M:%S")
+  logFile.write(str_date_time + " " + "Pin: " + str(pin) + " State: " + str(state) + "\n")
+  logFile.close()
 
