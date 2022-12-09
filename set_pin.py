@@ -7,18 +7,19 @@ from os.path import exists
 import pickle
 import sys
 from datetime import datetime
+from read_pin import settings_exist, read_settings_file, generate_settings_file, write_settings_file
 
 #pin = int(sys.argv[1])
 #state = int(sys.argv[2])
 
-stateFileName = "state_log"
-stateFilePath = ""
-stateFileFullPath = stateFilePath + stateFileName
-logFileName = "usage_log.txt"
-logFileFullPath = stateFilePath + logFileName
+#stateFileName = "state_log"
+#stateFilePath = ""
+#stateFileFullPath = stateFilePath + stateFileName
+#logFileName = "usage_log.txt"
+#logFileFullPath = stateFilePath + logFileName
 
-def file_test(pin):
-  if exists(stateFilePath + stateFileName):
+def file_test(stateFileFullPath, pin):
+  if exists(stateFileFullPath):
     #print("file exists")
     stateFile = open(stateFileFullPath, "rb")
     stateDict = pickle.load(stateFile)
@@ -46,7 +47,7 @@ def check_toggle(stateDict, pin, newState):
     #print("will toggle!")
     return 1
 
-def set_pin_state(stateDict, pin, state):
+def set_pin_state(stateFileFullPath, stateDict, pin, state):
   #print("hello there")
   if check_toggle(stateDict, pin, state):
     GPIO.setmode(GPIO.BCM)
@@ -70,10 +71,28 @@ def pin_name_to_number(pinName):
 def pin_number_to_name(pin):
   return "Pin"+str(pin)
 
-def raspi_gpio_control(pin, state):
-  stateDict = file_test(pin)
+def raspi_gpio_control(settingsFileName="settings.ini", raspi_gpio_settings={"stateFileName": "state_log", "stateFilePath": "", "logFileName": "usage_log.txt", "logFilePath": ""}, pin=1, state=0):
+  settingsFileFolderLevel = settings_exist(settingsFileName)
+  if settingsFileFolderLevel == 0:
+    generate_settings_file(settingsFileName, 1, raspi_gpio_settings)
+    settingsFileFolderLevel = 1
+  
+  readSettingsContent = read_settings_file(settingsFileName, settingsFileFolderLevel)
+
+  #print(raspi_gpio_settings)
+
+  for x in raspi_gpio_settings:
+    if x not in readSettingsContent:
+      readSettingsContent[x] = raspi_gpio_settings[x]
+      write_settings_file(settingsFileName, settingsFileFolderLevel, readSettingsContent)
+  
+  raspi_gpio_settings = read_settings_file(settingsFileName, settingsFileFolderLevel)
+  stateFileFullPath = raspi_gpio_settings["stateFilePath"] + raspi_gpio_settings["stateFileName"]
+  logFileFullPath = raspi_gpio_settings["logFilePath"] + raspi_gpio_settings["logFileName"]
+
+  stateDict = file_test(stateFileFullPath, pin)
   GPIO.setwarnings(False)
-  set_pin_state(stateDict, pin, state)
+  set_pin_state(stateFileFullPath, stateDict, pin, state)
   logFile = open(logFileFullPath, "a")
   dt = datetime.now()
   str_date_time = dt.strftime("%d-%m-%Y, %H:%M:%S")
@@ -82,7 +101,7 @@ def raspi_gpio_control(pin, state):
 
 
 if __name__ == "__main__":
-  raspi_gpio_control(int(sys.argv[1]), int(sys.argv[2]))
+  raspi_gpio_control(pin=int(sys.argv[1]), state=int(sys.argv[2]))
   #print("hello there")
   #stateDict = file_test(pin)
   #print("The dictionary is:")
