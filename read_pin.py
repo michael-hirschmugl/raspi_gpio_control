@@ -17,6 +17,13 @@ stateFileFullPath = stateFilePath + stateFileName
 def raspi_gpio_read_pin(pin):
   stateFile = open(stateFileFullPath, "rb")
   stateDict = pickle.load(stateFile)
+  #print(int(stateDict["Pin"+str(pin)]))
+  stateFile.close()
+  return int(stateDict["Pin"+str(pin)])
+
+def raspi_gpio_print_pin(pin):
+  stateFile = open(stateFileFullPath, "rb")
+  stateDict = pickle.load(stateFile)
   print(int(stateDict["Pin"+str(pin)]))
   stateFile.close()
 
@@ -26,4 +33,4 @@ if __name__ == "__main__":
   #stateDict = pickle.load(stateFile)
   #print(int(stateDict["Pin"+str(pin)]))
   #stateFile.close()
-  raspi_gpio_read_pin(int(sys.argv[1]))
+  raspi_gpio_print_pin(int(sys.argv[1]))
