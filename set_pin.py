@@ -8,8 +8,8 @@ import pickle
 import sys
 from datetime import datetime
 
-pin = int(sys.argv[1])
-state = int(sys.argv[2])
+#pin = int(sys.argv[1])
+#state = int(sys.argv[2])
 
 stateFileName = "state_log"
 stateFilePath = ""
@@ -70,24 +70,45 @@ def pin_name_to_number(pinName):
 def pin_number_to_name(pin):
   return "Pin"+str(pin)
 
-if __name__ == "__main__":
-  #print("hello there")
+def raspi_gpio_control(pin, state):
   stateDict = file_test(pin)
+  GPIO.setwarnings(False)
+  set_pin_state(stateDict, pin, state)
+  logFile = open(logFileFullPath, "a")
+  dt = datetime.now()
+  str_date_time = dt.strftime("%d-%m-%Y, %H:%M:%S")
+  logFile.write(str_date_time + " " + "Pin: " + str(pin) + " State: " + str(state) + "\n")
+  logFile.close()
+
+
+if __name__ == "__main__":
+  raspi_gpio_control(int(sys.argv[1]), int(sys.argv[2]))
+  #print("hello there")
+  #stateDict = file_test(pin)
   #print("The dictionary is:")
   #print(stateDict)
   #print("argument 1", pin)
   #print("argument 2", state)
   #print("Pin", pin_number_to_name(pin), "is now", stateDict[pin_number_to_name(pin)])
 
-  GPIO.setwarnings(False)
+  #GPIO.setwarnings(False)
 
-  set_pin_state(stateDict, pin, state)
+  #set_pin_state(stateDict, pin, state)
   #sleep(2)
   #set_pin_state(stateDict, pin, 0)
 
-  logFile = open(logFileFullPath, "a")
-  dt = datetime.now()
-  str_date_time = dt.strftime("%d-%m-%Y, %H:%M:%S")
-  logFile.write(str_date_time + " " + "Pin: " + str(pin) + " State: " + str(state) + "\n")
-  logFile.close()
+  #logFile = open(logFileFullPath, "a")
+  #dt = datetime.now()
+  #str_date_time = dt.strftime("%d-%m-%Y, %H:%M:%S")
+  #logFile.write(str_date_time + " " + "Pin: " + str(pin) + " State: " + str(state) + "\n")
+  #logFile.close()
+
+  #stateDict = file_test(pin)
+  #GPIO.setwarnings(False)
+  #set_pin_state(stateDict, pin, state)
+  #logFile = open(logFileFullPath, "a")
+  #dt = datetime.now()
+  #str_date_time = dt.strftime("%d-%m-%Y, %H:%M:%S")
+  #logFile.write(str_date_time + " " + "Pin: " + str(pin) + " State: " + str(state) + "\n")
+  #logFile.close()
 

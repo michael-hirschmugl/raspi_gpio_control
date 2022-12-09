@@ -14,9 +14,25 @@ stateFileName = "state_log"
 stateFilePath = ""
 stateFileFullPath = stateFilePath + stateFileName
 
-if __name__ == "__main__":
+def raspi_gio_read_state_log():
+  #print("Printing file content:")
+  stateFile = open(stateFileFullPath, "rb")
+  stateDict = pickle.load(stateFile)
+  #print(stateDict)
+  stateFile.close()
+  return stateDict
+
+def raspi_gio_print_state_log():
   print("Printing file content:")
   stateFile = open(stateFileFullPath, "rb")
   stateDict = pickle.load(stateFile)
   print(stateDict)
   stateFile.close()
+
+if __name__ == "__main__":
+  #print("Printing file content:")
+  #stateFile = open(stateFileFullPath, "rb")
+  #stateDict = pickle.load(stateFile)
+  #print(stateDict)
+  #stateFile.close()
+  raspi_gio_print_state_log()
