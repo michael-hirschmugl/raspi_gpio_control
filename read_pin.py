@@ -6,45 +6,12 @@ from os.path import exists
 import pickle
 import sys
 import json
+from settings_handler import settings_exist, read_settings_file, generate_settings_file, write_settings_file
 
-def settings_exist(settingsFileName):
-  if exists(settingsFileName):
-      return 1
-  else:
-      if exists("../" + settingsFileName):
-        return 2
-      else:
-        return 0
 
-def read_settings_file(settingsFileName, folder_level):
-  if folder_level == 1:
-    settings_file = open(settingsFileName, "rb")
-  else:
-    settings_file = open("../" + settingsFileName, "rb")
-  settings_content = json.load(settings_file)
-  settings_file.close()
-  return settings_content
-
-def generate_settings_file(settingsFileName, folder_level, settings_content):
-  settings_json = json.dumps(settings_content)
-  if folder_level == 1:
-    settings_file = open(settingsFileName,"w")
-  else:
-    settings_file = open("../" + settingsFileName,"w")
-  settings_file.write(settings_json)
-  settings_file.close()
-
-def write_settings_file(settingsFileName, folder_level, settingsContent):
-  settings_json = json.dumps(settingsContent)
-  if folder_level == 1:
-    settings_file = open(settingsFileName,"w")
-  else:
-    settings_file = open("../" + settingsFileName,"w")
-  settings_file.write(settings_json)
-  settings_file.close()
-  return 0
-
-def raspi_gpio_read_pin(settingsFileName="settings.ini", raspi_gpio_settings={"stateFileName": "state_log", "stateFilePath": ""}, pin=1):
+def raspi_gpio_read_pin(pin):
+  settingsFileName = "settings.ini"
+  raspi_gpio_settings = {"stateFileName": "state_log", "stateFilePath": ""}
   settingsFileFolderLevel = settings_exist(settingsFileName)
   if settingsFileFolderLevel == 0:
     generate_settings_file(settingsFileName, 1, raspi_gpio_settings)
@@ -65,7 +32,9 @@ def raspi_gpio_read_pin(settingsFileName="settings.ini", raspi_gpio_settings={"s
   stateFile.close()
   return int(stateDict["Pin"+str(pin)])
 
-def raspi_gpio_print_pin(settingsFileName="settings.ini", raspi_gpio_settings={"stateFileName": "state_log", "stateFilePath": ""}, pin=1):
+def raspi_gpio_print_pin(pin):
+  settingsFileName = "settings.ini"
+  raspi_gpio_settings = {"stateFileName": "state_log", "stateFilePath": ""}
   settingsFileFolderLevel = settings_exist(settingsFileName)
   if settingsFileFolderLevel == 0:
     generate_settings_file(settingsFileName, 1, raspi_gpio_settings)
@@ -87,4 +56,4 @@ def raspi_gpio_print_pin(settingsFileName="settings.ini", raspi_gpio_settings={"
   stateFile.close()
 
 if __name__ == "__main__":
-  raspi_gpio_print_pin(pin=int(sys.argv[1]))
+  raspi_gpio_print_pin(int(sys.argv[1]))
