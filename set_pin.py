@@ -8,7 +8,7 @@ from state_handler import file_test, set_pin_state
 
 
 def raspi_gpio_control(pin, state):
-  settingsFileName = "settings.ini"
+  settingsFileName = "/home/automation/settings/gpio_settings.ini"
   raspi_gpio_settings = {"stateFileName": "state_log", "stateFilePath": "", "logFileName": "usage_log.txt", "logFilePath": ""}
   settingsFileFolderLevel = settings_exist(settingsFileName)
   if settingsFileFolderLevel == 0:

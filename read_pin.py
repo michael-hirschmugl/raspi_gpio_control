@@ -10,7 +10,7 @@ from settings_handler import settings_exist, read_settings_file, generate_settin
 
 
 def raspi_gpio_read_pin(pin):
-  settingsFileName = "settings.ini"
+  settingsFileName = "/home/automation/settings/gpio_settings.ini"
   raspi_gpio_settings = {"stateFileName": "state_log", "stateFilePath": ""}
   settingsFileFolderLevel = settings_exist(settingsFileName)
   if settingsFileFolderLevel == 0:
@@ -33,7 +33,7 @@ def raspi_gpio_read_pin(pin):
   return int(stateDict["Pin"+str(pin)])
 
 def raspi_gpio_print_pin(pin):
-  settingsFileName = "settings.ini"
+  settingsFileName = "/home/automation/settings/gpio_settings.ini"
   raspi_gpio_settings = {"stateFileName": "state_log", "stateFilePath": ""}
   settingsFileFolderLevel = settings_exist(settingsFileName)
   if settingsFileFolderLevel == 0:

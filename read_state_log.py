@@ -5,7 +5,7 @@ from settings_handler import settings_exist, read_settings_file, generate_settin
 
 
 def raspi_gio_read_state_log():
-  settingsFileName = "settings.ini"
+  settingsFileName = "/home/automation/settings/gpio_settings.ini"
   raspi_gpio_settings = {"stateFileName": "state_log", "stateFilePath": ""}
   settingsFileFolderLevel = settings_exist(settingsFileName)
   if settingsFileFolderLevel == 0:
@@ -27,7 +27,7 @@ def raspi_gio_read_state_log():
   return stateDict
 
 def raspi_gio_print_state_log():
-  settingsFileName = "settings.ini"
+  settingsFileName = "/home/automation/settings/gpio_settings.ini"
   raspi_gpio_settings = {"stateFileName": "state_log", "stateFilePath": ""}
   settingsFileFolderLevel = settings_exist(settingsFileName)
   if settingsFileFolderLevel == 0:
